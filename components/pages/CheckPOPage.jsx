@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Search } from "lucide-react"
 
-export default function CheckPOPage({ user, orders, updateOrders }) {
+export default function CheckPOPage({ user, orders, updateOrders, onNavigate }) {
   const [selectedOrders, setSelectedOrders] = useState([])
   const [deliveryDates, setDeliveryDates] = useState({})
   const [activeTab, setActiveTab] = useState("pending")
@@ -56,22 +56,28 @@ export default function CheckPOPage({ user, orders, updateOrders }) {
       [orderId]: date,
     })
   }
-
-  const handleSubmit = () => {
-    const updatedOrders = orders.map((order) => {
-      if (selectedOrders.includes(order.id) && deliveryDates[order.id]) {
-        return {
-          ...order,
-          expectedDeliveryDate: deliveryDates[order.id],
-        }
+const handleSubmit = () => {
+  const updatedOrders = orders.map((order) => {
+    if (selectedOrders.includes(order.id) && deliveryDates[order.id]) {
+      return {
+        ...order,
+        expectedDeliveryDate: deliveryDates[order.id],
+        soChecked: false, // This will make it show in CheckDeliveryPage's pending
+        deliveryChecked: false
       }
-      return order
-    })
+    }
+    return order
+  })
 
-    updateOrders(updatedOrders)
-    setSelectedOrders([])
-    setDeliveryDates({})
+  updateOrders(updatedOrders)
+  setSelectedOrders([])
+  setDeliveryDates({})
+  
+  // If onNavigate is provided, navigate to Check for Delivery
+  if (onNavigate) {
+    onNavigate("Check for Delivery")
   }
+}
 
   return (
     <div className="space-y-6">

@@ -5,15 +5,14 @@ import Sidebar from "./Sidebar"
 import Dashboard from "./pages/Dashboard"
 import OrderPage from "./pages/OrderPage"
 import CheckPOPage from "./pages/CheckPOPage"
-import SOCheckPage from "./pages/SOCheckPage"
+
 import CheckDeliveryPage from "./pages/CheckDeliveryPage"
 import DispatchPlanningPage from "./pages/DispatchPlanningPage"
 import LogisticPage from "./pages/LogisticPage"
 import TestReportPage from "./pages/TestReportPage"
 import InvoicePage from "./pages/InvoicePage"
 import WetmanEntryPage from "./pages/WetmanEntryPage"
-import BiltyEntryPage from "./pages/BiltyEntryPage"
-import FullKittingPage from "./pages/FullKittingPage"
+
 import MaterialReceiptPage from "./pages/MaterialReceiptPage"
 
 export default function MainLayout({ user, onLogout, orders, updateOrders }) {
@@ -29,9 +28,13 @@ export default function MainLayout({ user, onLogout, orders, updateOrders }) {
       case "Order":
         return <OrderPage {...pageProps} />
       case "Check PO":
-        return <CheckPOPage {...pageProps} />
-      case "SO Check":
-        return <SOCheckPage {...pageProps} />
+        return<CheckPOPage 
+  user={user} 
+  orders={orders} 
+  updateOrders={updateOrders} 
+  onNavigate={setCurrentPage} 
+/>
+    
       case "Check for Delivery":
         return <CheckDeliveryPage {...pageProps} />
       case "Dispatch Planning":
@@ -44,10 +47,7 @@ export default function MainLayout({ user, onLogout, orders, updateOrders }) {
         return <InvoicePage {...pageProps} />
       case "Wetman Entry":
         return <WetmanEntryPage {...pageProps} />
-      case "Bilty Entry":
-        return <BiltyEntryPage {...pageProps} />
-      case "Full Kitting":
-        return <FullKittingPage {...pageProps} />
+    
       case "MATERIAL RECEIPT":
         return <MaterialReceiptPage {...pageProps} />
       default:

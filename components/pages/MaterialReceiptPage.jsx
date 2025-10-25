@@ -19,17 +19,26 @@ export default function MaterialReceiptPage({ user, orders, updateOrders }) {
   })
 
   // Filter orders based on user role and full kitting completed
-  const getFilteredOrders = () => {
-    let filtered = orders.filter((order) => order.fullKittingCompleted)
-    if (user.role !== "master") {
-      filtered = filtered.filter((order) => order.firmName === user.firm)
-    }
-    return filtered
+const getFilteredOrders = () => {
+  let filtered = orders.filter(order => 
+    order.expectedDeliveryDate &&  // Only orders with expected delivery
+    !order.materialReceiptChecked &&   // Only show unchecked entries
+    order.wetmanEntryChecked           // Only show with wetman entry history
+  )
+  
+  if (user.role !== "master") {
+    filtered = filtered.filter(order => order.firmName === user.firm)
   }
+  return filtered
+}
 
   const filteredOrders = getFilteredOrders()
   const pendingOrders = filteredOrders.filter((order) => !order.materialReceived)
-  const historyOrders = filteredOrders.filter((order) => order.materialReceived)
+  const historyOrders = orders.filter(order => 
+    order.materialReceiptChecked &&
+    order.expectedDeliveryDate &&
+    (user.role === "master" || order.firmName === user.firm)
+  )
 
   // Apply search filter
   const searchFilteredOrders = (ordersList) => {
@@ -50,27 +59,29 @@ export default function MaterialReceiptPage({ user, orders, updateOrders }) {
   }
 
   const handleSubmit = () => {
-    if (!selectedOrder) return
+  if (!selectedOrder) return
 
-    const updatedOrders = orders.map((order) => {
-      if (order.id === selectedOrder.id) {
-        return {
-          ...order,
-          materialReceived: true,
-          materialReceiptDate: new Date().toISOString().split("T")[0],
-          ...formData,
-        }
+  const updatedOrders = orders.map((order) => {
+    if (order.id === selectedOrder.id) {
+      return {
+        ...order,
+        materialReceiptChecked: true,
+        materialReceived: true,
+        materialReceiptDate: new Date().toISOString().split("T")[0],
+        // Add any other form fields
+        ...formData
       }
-      return order
-    })
+    }
+    return order
+  })
 
-    updateOrders(updatedOrders)
-    setSelectedOrder(null)
-    setFormData({
-      materialReceivedDate: "",
-      grnNumber: "",
-    })
-  }
+  updateOrders(updatedOrders)
+  setSelectedOrder(null)
+  setFormData({
+    materialReceivedDate: "",
+    grnNumber: "",
+  })
+}
 
   const handleCancel = () => {
     setSelectedOrder(null)

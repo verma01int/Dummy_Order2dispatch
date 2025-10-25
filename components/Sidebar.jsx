@@ -24,15 +24,14 @@ const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard },
   { name: "Order", icon: ShoppingCart },
   { name: "Check PO", icon: FileCheck },
-  { name: "SO Check", icon: CheckSquare },
+
   { name: "Check for Delivery", icon: Truck },
   { name: "Dispatch Planning", icon: Calendar },
   { name: "Logistic", icon: Package },
   { name: "Test Report", icon: FileText },
   { name: "Invoice", icon: Receipt },
   { name: "Wetman Entry", icon: Scale },
-  { name: "Bilty Entry", icon: FileImage },
-  { name: "Full Kitting", icon: Layers },
+  
   { name: "MATERIAL RECEIPT", icon: Archive },
 ]
 

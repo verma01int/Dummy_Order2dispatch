@@ -22,17 +22,25 @@ export default function CheckDeliveryPage({ user, orders, updateOrders }) {
   })
 
   // Filter orders based on user role and SO checked
-  const getFilteredOrders = () => {
-    let filtered = orders.filter((order) => order.soChecked)
-    if (user.role !== "master") {
-      filtered = filtered.filter((order) => order.firmName === user.firm)
-    }
-    return filtered
+const getFilteredOrders = () => {
+  let filtered = orders.filter((order) => 
+    order.expectedDeliveryDate &&  // Only include orders with expected delivery date
+    !order.deliveryChecked  // Show if delivery is not checked
+  )
+  
+  if (user.role !== "master") {
+    filtered = filtered.filter((order) => order.firmName === user.firm)
   }
+  return filtered
+}
 
   const filteredOrders = getFilteredOrders()
   const pendingOrders = filteredOrders.filter((order) => !order.deliveryChecked)
-  const historyOrders = filteredOrders.filter((order) => order.deliveryChecked)
+  const historyOrders = orders.filter((order) => 
+    order.expectedDeliveryDate &&
+    order.deliveryChecked &&
+    (user.role === "master" || order.firmName === user.firm)
+  )
 
   // Apply search filter
   const searchFilteredOrders = (ordersList) => {

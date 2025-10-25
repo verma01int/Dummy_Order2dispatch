@@ -24,18 +24,21 @@ export default function WetmanEntryPage({ user, orders, updateOrders }) {
   })
 
   // Filter orders based on user role and invoice completed
-  const getFilteredOrders = () => {
-    let filtered = orders.filter((order) => order.invoiceCompleted)
-    if (user.role !== "master") {
-      filtered = filtered.filter((order) => order.firmName === user.firm)
-    }
-    return filtered
+const getFilteredOrders = () => {
+  let filtered = orders.filter(order => 
+    order.expectedDeliveryDate &&  // Only orders with expected delivery
+    !order.wetmanEntryChecked &&   // Only show unchecked entries
+    order.billNo                   // Only show invoiced orders
+  )
+  
+  if (user.role !== "master") {
+    filtered = filtered.filter(order => order.firmName === user.firm)
   }
-
-  const filteredOrders = getFilteredOrders()
-  const pendingOrders = filteredOrders.filter((order) => !order.wetmanEntryCompleted)
-  const historyOrders = filteredOrders.filter((order) => order.wetmanEntryCompleted)
-
+  return filtered
+}
+const filteredOrders = getFilteredOrders()
+const pendingOrders = filteredOrders  // All filtered orders are pending
+const historyOrders = orders.filter(order => order.wetmanEntryChecked)  // Show checked orders in history
   // Apply search filter
   const searchFilteredOrders = (ordersList) => {
     return ordersList.filter((order) =>
@@ -58,24 +61,25 @@ export default function WetmanEntryPage({ user, orders, updateOrders }) {
     })
   }
 
-  const handleSubmit = () => {
-    if (!selectedOrder) return
+const handleSubmit = () => {
+  if (!selectedOrder) return
 
-    const updatedOrders = orders.map((order) => {
-      if (order.id === selectedOrder.id) {
-        return {
-          ...order,
-          wetmanEntryCompleted: true,
-          wetmanEntryDate: new Date().toISOString().split("T")[0],
-          ...formData,
-        }
+  const updatedOrders = orders.map((order) => {
+    if (order.id === selectedOrder.id) {
+      return {
+        ...order,
+        wetmanEntryChecked: true,  // Mark as checked
+        wetmanEntryDate: new Date().toISOString().split("T")[0],
+        // Add any other form fields you need to save
+        ...formData
       }
-      return order
-    })
+    }
+    return order
+  })
 
-    updateOrders(updatedOrders)
-    setSelectedOrder(null)
-    setFormData({
+  updateOrders(updatedOrders)
+  setSelectedOrder(null)
+  setFormData({
       actualQtyLoadedTruck: "",
       actualQtyWeighmentSlip: "",
       imageSlip1: null,

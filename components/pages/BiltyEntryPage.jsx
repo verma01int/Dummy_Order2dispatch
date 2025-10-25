@@ -49,24 +49,27 @@ export default function BiltyEntryPage({ user, orders, updateOrders }) {
     })
   }
 
-  const handleSubmit = () => {
-    if (!selectedOrder) return
+const handleSubmit = () => {
+  if (!selectedOrder) return
 
-    const updatedOrders = orders.map((order) => {
-      if (order.id === selectedOrder.id) {
-        return {
-          ...order,
-          biltyEntryCompleted: true,
-          biltyEntryDate: new Date().toISOString().split("T")[0],
-          ...formData,
-        }
+  const updatedOrders = orders.map((order) => {
+    if (order.id === selectedOrder.id) {
+      return {
+        ...order,
+        biltyEntryChecked: true,
+        biltyEntryDate: new Date().toISOString().split("T")[0],
+        // Add any other form fields
+        ...formData,
+        // Remove any pending flags
+        biltyEntryPending: false
       }
-      return order
-    })
+    }
+    return order
+  })
 
-    updateOrders(updatedOrders)
-    setSelectedOrder(null)
-    setFormData({
+  updateOrders(updatedOrders)
+  setSelectedOrder(null)
+  setFormData({
       biltyNo: "",
       biltyImage: null,
     })
