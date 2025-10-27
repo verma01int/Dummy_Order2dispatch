@@ -87,8 +87,8 @@ export default function OrderPage({ user, orders, updateOrders }) {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      {/* Desktop Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 hidden lg:flex">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Orders Management</h1>
           <p className="text-gray-600">Manage your orders and track their progress through the workflow</p>
@@ -103,6 +103,12 @@ export default function OrderPage({ user, orders, updateOrders }) {
             Add New Order
           </Button>
         </div>
+      </div>
+
+      {/* Mobile Header */}
+      <div className="lg:hidden">
+        <h1 className="text-2xl font-bold text-gray-900">Orders Management</h1>
+        <p className="text-sm text-gray-600 mt-1">Manage & track orders</p>
       </div>
 
       {/* Stats Overview */}
